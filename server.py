@@ -4,6 +4,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from sendEmail import send_email
 from utils import getDatePath
+import hashlib
 
 # 配置日志记录器  
 logger = logging.getLogger(__name__)  
@@ -34,6 +35,31 @@ def post_data():
         return jsonify({'message': 'error.'}), 400  
     # 向客户端发送响应  
 
+@app.route('/wx', methods=['GET'])  
+def get_handle():  
+    try:
+        data = request.get_json()  
+        if len(data) == 0:
+            return "hello, this is handle view"
+        signature = data.signature
+        timestamp = data.timestamp
+        nonce = data.nonce
+        echostr = data.echostr
+        token = "lq0508" #请按照公众平台官网\基本配置中信息填写
+
+        list = [token, timestamp, nonce]
+        list.sort()
+        sha1 = hashlib.sha1()
+        map(sha1.update, list)
+        hashcode = sha1.hexdigest()
+        print("handle/GET func: hashcode, signature: ", hashcode, signature)
+        if hashcode == signature:
+            return echostr
+        else:
+            return ""
+    except Exception as Argument:
+        return Argument 
+
 if __name__ == '__main__':  
     # 启动Flask服务器，监听5000端口  
-    app.run(debug=False, port=9527)
+    app.run(debug=False, port=80)
