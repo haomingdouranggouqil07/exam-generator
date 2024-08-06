@@ -62,4 +62,4 @@ def get_handle():
 
 if __name__ == '__main__':  
     # 启动Flask服务器，监听5000端口  
-    app.run(debug=False, port=80)
+    app.run(port=80)
