@@ -35,10 +35,15 @@ def post_data():
         return jsonify({'message': 'error.'}), 400  
     # 向客户端发送响应  
 
+@app.route('/', methods=['GET'])  
+def get_home():
+    return "hello world"  
+
 @app.route('/wx', methods=['GET'])  
 def get_handle():  
     try:
-        data = request.get_json()  
+        data = request.get_json()
+        print(data)  
         if len(data) == 0:
             return "hello, this is handle view"
         signature = data.signature
@@ -62,4 +67,4 @@ def get_handle():
 
 if __name__ == '__main__':  
     # 启动Flask服务器，监听5000端口  
-    app.run(port=80)
+    app.run(host="0.0.0.0", port=80)
